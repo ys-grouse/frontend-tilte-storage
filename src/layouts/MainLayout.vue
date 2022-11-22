@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+    <q-header>
       <q-toolbar>
         <!-- <q-btn
           flat
@@ -31,11 +31,14 @@
 <script setup>
 import { getToken, authToken } from "src/modules/authState";
 import { onMounted, ref } from "vue";
+import { useQuasar } from "quasar";
 
+const q = useQuasar();
 const leftDrawerOpen = ref(false);
 const token = null;
 // const token = getToken();
 onMounted(() => {
+  q.dark.set(true);
   //
 });
 

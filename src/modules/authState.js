@@ -2,6 +2,7 @@ import { api } from "src/boot/axios";
 import { ref } from "vue";
 
 const authToken = ref(null);
+const showAddPage = ref(false);
 const isAuth = ref(false);
 function getToken() {
   authToken.value = localStorage.getItem("token");
@@ -27,4 +28,4 @@ async function getUser() {
   }
 }
 
-export { isAuth, authToken, getToken, getUser, setToken };
+export { isAuth, authToken, showAddPage, getToken, getUser, setToken };
