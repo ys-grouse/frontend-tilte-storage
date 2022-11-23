@@ -3,9 +3,9 @@
     <q-banner
       class="text-white bg-red absolute-top q-pr-xs"
       style="font-size: 19px; z-index: 99"
-      v-if="data.errorMessage"
+      v-show="data.errorMessage"
     >
-      {{ errorMessage }}
+      {{ data.errorMessage }}
       <template v-slot:action>
         <q-btn
           unelevated
@@ -96,9 +96,9 @@ async function onSubmit() {
     data.value.loading = false;
     if (error.response) {
       if (typeof error.response.data.message == "string")
-        errorMessage.value = error.response.data.message;
-      else errorMessage.value = error.response.data.message[0];
-    } else errorMessage.value = error.message;
+        data.value.errorMessage = error.response.data.message;
+      else data.value.errorMessage = error.response.data.message[0];
+    } else data.value.errorMessage = error.message;
     setTimeout(() => {
       errorMessage.value = null;
     }, 3500);

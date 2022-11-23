@@ -3,7 +3,7 @@
     <q-banner
       class="text-white bg-red absolute-top q-pr-xs"
       style="font-size: 19px; z-index: 99"
-      v-if="data.errorMessage"
+      v-show="data.errorMessage"
     >
       {{ data.errorMessage }}
       <template v-slot:action>
@@ -20,7 +20,7 @@
     </q-banner>
 
     <q-form
-      v-if="data.register"
+      v-if="data.register && !data.otp"
       class=""
       style="padding-bottom: 20vh"
       @submit="onSubmit"
@@ -98,9 +98,12 @@ const props = defineProps(["user", "data"]);
 const { user, data } = toRefs(props);
 
 async function onSubmit() {
-  const res = await api.post("/check-unique", user.value);
-  //data validated ready to send sms
-  //after sedning sms, otp will be used which wil further save data to the database
+  try {
+    const res = await api.post("/check-unique", user.value);
+    data.value.otp = true;
+  } catch (error) {
+    console.log(error.message);
+  }
 }
 </script>
 

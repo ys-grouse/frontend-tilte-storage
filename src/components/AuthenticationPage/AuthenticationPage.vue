@@ -2,6 +2,7 @@
   <q-page padding class="flex flex-center">
     <LoginPage :user="user" :data="data" />
     <RegisterPage :user="user" :data="data" />
+    <OtpPage :user="user" :data="data" />
   </q-page>
 </template>
 
@@ -10,6 +11,7 @@ import { api } from "src/boot/axios";
 import { authToken, isAuth } from "src/modules/authState";
 import { ref } from "vue";
 import LoginPage from "./LoginPage.vue";
+import OtpPage from "./OtpPage.vue";
 
 import RegisterPage from "./RegisterPage.vue";
 // const errorMessage = ref(null);
@@ -18,6 +20,7 @@ const data = ref({
   register: false,
   loading: false,
   errorMessage: false,
+  otp: false,
 });
 
 const user = ref({
