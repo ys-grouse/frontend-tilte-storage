@@ -17,10 +17,10 @@ import RegisterPage from "./RegisterPage.vue";
 // const errorMessage = ref(null);
 const register = ref(false);
 const data = ref({
-  register: false,
+  register: true,
   loading: false,
   errorMessage: false,
-  otp: false,
+  otp: true,
 });
 
 const user = ref({
