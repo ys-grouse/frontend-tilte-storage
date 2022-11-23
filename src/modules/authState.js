@@ -17,9 +17,7 @@ function setToken(data) {
 async function getUser() {
   getToken();
   try {
-    console.log("asdfasdf");
     const res = await api.get("user");
-    console.log(res.data);
     isAuth.value = true;
     return res.data;
   } catch (error) {

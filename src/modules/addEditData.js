@@ -1,6 +1,7 @@
 import { ref } from "vue";
 
 ///
+const documentData = ref([]);
 const label = ref("");
 const info = ref("");
 const title = ref("ADD");
@@ -14,4 +15,4 @@ const document = ref({
   details: {},
 });
 
-export { title, label, info, addDocumentDetail, document };
+export { documentData, title, label, info, addDocumentDetail, document };

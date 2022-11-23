@@ -32,17 +32,17 @@
               :rules="[(val) => !!val || 'Enter document name']"
             />
           </q-card-section>
-          <q-card-section class="q-pt-none">
-            <q-markup-table style="min-width: 340px">
-              <tbody>
+          <!-- <q-separator></q-separator> -->
+          <q-card-section class="q-px-none full-width" style="">
+            <q-markup-table class="" style="width: 100%">
+              <tbody class="" style="width: 100%">
                 <tr
                   v-for="(item, index) in Object.keys(document.details)"
                   :key="index"
+                  style="width: 100%"
                 >
                   <td
-                    colspan="1"
                     class="text-bold label-field"
-                    style="max-width: fit-content"
                     @click="
                       label = item;
                       info = document.details[item];
@@ -52,7 +52,6 @@
                     {{ item }}
                   </td>
                   <td
-                    colspan="2"
                     class=""
                     @click="
                       label = item;
@@ -96,6 +95,7 @@
               icon="check"
               label="submit"
               type="submit"
+              :loading="loading"
             />
           </q-card-actions>
           <q-card-actions>
@@ -166,7 +166,7 @@
 </template>
 
 <script setup>
-import { Loading, useQuasar } from "quasar";
+import { useQuasar } from "quasar";
 import { api } from "src/boot/axios";
 import { onUnmounted, ref } from "vue";
 
@@ -176,10 +176,12 @@ import {
   info,
   addDocumentDetail,
   document,
+  documentData,
 } from "src/modules/addEditData";
 import { showAddPage } from "src/modules/authState";
 
 const q = useQuasar();
+const loading = ref(false);
 
 onUnmounted(() => {
   title.value = "ADD";
@@ -187,18 +189,26 @@ onUnmounted(() => {
 
 async function onSubmit() {
   try {
-    Loading.value = true;
+    loading.value = true;
+    let res;
     const fd = new FormData();
     fd.append("name", document.value.name);
     fd.append("part", document.value.part);
-    fd.append("document_file", document.value.document_file);
+    if (document.value?.document_file)
+      fd.append("document_file", document.value.document_file);
     fd.append("details", JSON.stringify(document.value.details));
-    if (title.value == "EDIT") fd.append("_method", "patch");
-    const res = await api.post("document", fd);
-    Loading.value = false;
+    console.log(document.value);
+
+    if (title.value == "EDIT") {
+      // fd.append("_method", "patch");
+      fd.append("path", document.value.path);
+      res = await api.post(`document/${document.value?.id}`, fd);
+    } else res = await api.post("document", fd);
+    documentData.value = res.data;
+    loading.value = false;
     showAddPage.value = false;
   } catch (error) {
-    Loading.value = false;
+    loading.value = false;
     q.notify({
       message: error.message,
     });

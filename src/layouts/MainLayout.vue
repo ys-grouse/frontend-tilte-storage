@@ -2,16 +2,15 @@
   <q-layout view="lHh Lpr lFf">
     <q-header>
       <q-toolbar>
-        <!-- <q-btn
+        <q-toolbar-title> TILTE STORAGE </q-toolbar-title>
+        <q-btn
           flat
           dense
           round
-          icon="menu"
-          aria-label="Menu"
-          @click="leftDrawerOpen = !leftDrawerOpen"
-        /> -->
-
-        <q-toolbar-title> TILTE STORAGE </q-toolbar-title>
+          icon="mdi-logout"
+          v-if="isAuth"
+          @click="confirmLogoutDialog = true"
+        ></q-btn>
       </q-toolbar>
     </q-header>
 
@@ -24,23 +23,50 @@
 
     <q-page-container>
       <router-view :authToken="token" />
+      <q-dialog v-model="confirmLogoutDialog">
+        <q-card>
+          <q-toolbar class="bg-primary text-white">
+            <q-toolbar-title> CONFIRM LOGOUT </q-toolbar-title>
+          </q-toolbar>
+          <q-card-section> Are you sure you want to log out? </q-card-section>
+          <q-card-actions align="right">
+            <q-btn v-close-popup flat dense label="cancel"></q-btn>
+            <q-btn
+              color="primary"
+              label="Confirm"
+              @click="onLogoutConfirmed"
+            ></q-btn>
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
     </q-page-container>
   </q-layout>
 </template>
 
 <script setup>
-import { getToken, authToken } from "src/modules/authState";
+import { getToken, authToken, isAuth } from "src/modules/authState";
 import { onMounted, ref } from "vue";
 import { useQuasar } from "quasar";
+import { api } from "src/boot/axios";
 
 const q = useQuasar();
+const loading = ref(false);
 const leftDrawerOpen = ref(false);
+const confirmLogoutDialog = ref(false);
 const token = null;
 // const token = getToken();
 onMounted(() => {
   q.dark.set(true);
   //
 });
+
+async function onLogoutConfirmed() {
+  loading.value = true;
+  const res = await api.post("logout");
+  isAuth.value = false;
+  loading.value = false;
+  confirmLogoutDialog.value = false;
+}
 
 //
 </script>
