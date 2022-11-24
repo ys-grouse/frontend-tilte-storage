@@ -31,7 +31,7 @@
           <div
             @click="
               () => {
-                if (counter) otpResend();
+                if (!counter) otpResend();
               }
             "
             class="cursor-pointer q-pt-md text-center text-teal"
@@ -48,7 +48,7 @@
         </q-card-section>
       </q-card>
     </q-form>
-    <q-btn color="primary" icon="check" label="OK" @click="phoneAuth" />
+    <q-btn color="primary" icon="check" label="OK" @click="requestOtp" />
   </div>
 </template>
 
@@ -61,7 +61,9 @@ import {
   RecaptchaVerifier,
   signInWithPhoneNumber,
 } from "firebase/auth";
+import { useQuasar } from "quasar";
 
+const q = useQuasar();
 const auth = getAuth();
 //
 const props = defineProps(["data", "user"]);
@@ -69,6 +71,7 @@ const { user, data } = toRefs(props);
 const counter = ref(60);
 let timer = null;
 let appVerifier = null;
+let otpHandler = null;
 onMounted(() => {
   capthca();
   timer = setInterval(() => {
@@ -97,29 +100,33 @@ function capthca() {
   appVerifier = window.recaptchaVerifier;
 }
 
-async function phoneAuth(params) {
-  signInWithPhoneNumber(auth, user.value.phone, appVerifier)
-    .then((confirmationResult) => {
-      // return;
-      // SMS sent. Prompt user to type the code from the message, then sign the
-      // user in with confirmationResult.confirm(code).
-      // window.confirmationResult = confirmationResult;
-      // console.log("sent", window.confirmationResult);
-      // ...
-    })
-    .catch((error) => {
-      console.log("errir is: ", error);
-      // Error; SMS not sent
-      // ...
-    });
+async function requestOtp(params) {
+  try {
+    user.value.phone = "+917085052350";
+    // user.value.phone = "+919774888724";
+    otpHandler = await signInWithPhoneNumber(
+      auth,
+      user.value.phone,
+      appVerifier
+    );
+  } catch (error) {
+    console.log(error.message);
+  }
 }
 async function onSubmit() {
-  console.log("asdfasdf");
+  try {
+    const result = await otpHandler.confirm(data.value.otp);
+  } catch (error) {
+    console.log(error.message);
+    q.notify({
+      message: "invalid OTP",
+    });
+  }
 }
 
 async function otpResend() {
   alert("resent");
-  console.log("otp rese t");
+  console.log("INVALID OTP");
 }
 </script>
 
