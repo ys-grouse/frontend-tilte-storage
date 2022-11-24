@@ -37,7 +37,7 @@
                 dense
                 round
                 icon="mdi-clipboard"
-                @click="onCopyText(item.details[Object.keys(item.details)[0]])"
+                @click="onCopyText(item)"
               />
             </q-item-section>
           </q-item>
@@ -97,11 +97,15 @@ async function getDocuments() {
 }
 
 async function onCopyText(data) {
+  console.log(data.details["tilte"]);
+  const key = Object.keys(data.details)[0];
+  console.log("key is: ", key);
+  data = data.details[key];
+
   await navigator.clipboard.writeText(data);
   q.notify({
-    message: `${data} has been copied to clipboard`,
+    message: `${key} has been copied to clipboard`,
   });
-  // clipboard.writeText(item.details[Object.keys(item.details[0])]);
 }
 </script>
 
