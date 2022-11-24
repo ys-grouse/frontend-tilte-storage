@@ -73,8 +73,9 @@
           <q-img v-if="!isPDF" fit="none" :src="fileData" alt="" srcset="" />
           <vue-pdf-embed v-if="isPDF" :source="fileData" />
 
-          <div class="absolute-top-right q-pa-md">
-            <q-btn v-close-popup flat dense round icon="mdi-close"> </q-btn>
+          <div class="absolute-top-right q-pa-sm" style="z-index: 999">
+            <q-btn v-close-popup dense round color="primary" icon="mdi-close">
+            </q-btn>
           </div>
         </div>
       </q-card>
@@ -89,7 +90,7 @@ import { ref } from "vue";
 
 import { document, title } from "src/modules/addEditData";
 import { api } from "src/boot/axios";
-// import VuePdfEmbed from "vue-pdf-embed";
+import VuePdfEmbed from "vue-pdf-embed";
 const q = useQuasar();
 const props = defineProps(["data"]);
 //
