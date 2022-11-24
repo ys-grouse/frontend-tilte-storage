@@ -1,23 +1,5 @@
 <template>
   <div>
-    <q-banner
-      class="text-white bg-red absolute-top q-pr-xs"
-      style="font-size: 19px; z-index: 99"
-      v-show="data.errorMessage"
-    >
-      {{ data.errorMessage }}
-      <template v-slot:action>
-        <q-btn
-          unelevated
-          outlined
-          dense
-          class="bg-red-2"
-          text-color="primary"
-          label="close"
-          @click="data.errorMessage = null"
-        />
-      </template>
-    </q-banner>
     <q-form
       v-if="!data.register"
       class=""
@@ -66,13 +48,14 @@
 </template>
 
 <script setup>
+import { useQuasar } from "quasar";
 import { api } from "src/boot/axios";
 import { authToken, isAuth } from "src/modules/authState";
 import { onMounted, ref, toRefs } from "vue";
 
 const props = defineProps(["user", "data"]);
 const { user, data } = toRefs(props);
-
+const q = useQuasar();
 const loading = ref(false);
 // const user = ref({
 //   name: "",
@@ -88,19 +71,21 @@ async function onSubmit() {
     const res = await api.post("login", user.value);
     if (res.data) localStorage.setItem("token", res.data?.token);
     else localStorage.setItem("token", res.token);
+    console.log(res);
     data.value.loading = false;
     window.location.reload();
-    // authToken.value = res.token;
-    // isAuth.value = true;
+    authToken.value = res.token;
+    isAuth.value = true;
+    data.value.loading = false;
   } catch (error) {
     data.value.loading = false;
     if (error.response) {
-      if (typeof error.response.data.message == "string")
-        data.value.errorMessage = error.response.data.message;
-      else data.value.errorMessage = error.response.data.message[0];
+      // if (typeof error.response.data.message == "string")
+      data.value.errorMessage = error.response.data;
+      // else data.value.errorMessage = error.response.data.message[0];
     } else data.value.errorMessage = error.message;
     setTimeout(() => {
-      errorMessage.value = null;
+      data.value.errorMessage = null;
     }, 3500);
   }
 }

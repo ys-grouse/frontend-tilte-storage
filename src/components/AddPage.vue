@@ -6,14 +6,26 @@
     <q-form @submit="onSubmit">
       <div class="q-gutter-y-sm">
         <q-card class="full-width">
-          <q-card-section class="q-pb-none">
+          <q-card-section class="q-gutter-y-xs q-pb-none">
             <q-file
               dense
               outlined
               v-model="document.document_file"
-              label="Select Document"
+              :label="
+                title == 'EDIT'
+                  ? 'Select Document (Leave this empty to retain the old file)'
+                  : 'Select Document'
+              "
+              :stack-label="title == 'EDIT'"
               hint=""
             />
+            <!-- label="Select Document" -->
+
+            <!-- :hint="
+                title == 'EDIT'
+                  ? 'Leave document blank to retain the old file'
+                  : ''
+              " -->
             <q-input
               dense
               outlined
@@ -184,6 +196,7 @@ const q = useQuasar();
 const loading = ref(false);
 
 onUnmounted(() => {
+  document.value.document_file = "asdfasdf";
   title.value = "ADD";
 });
 

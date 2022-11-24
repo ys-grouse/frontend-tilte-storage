@@ -48,8 +48,37 @@
           </tbody>
         </q-markup-table>
         <q-separator></q-separator>
+        <q-card-section class="q-pa-xs">
+          <q-btn
+            flat
+            dense
+            class="full-width"
+            label="View Document"
+            @click="onViewDocument(data.id)"
+          ></q-btn>
+        </q-card-section>
       </div>
     </q-card>
+    <q-dialog maximized v-model="displayFile">
+      <q-card
+        class="row q-pa-md justify-center"
+        style="
+          height: 100vh;
+          width: 100vw;
+          overflow: hidden;
+          position: relative;
+        "
+      >
+        <div style="height: 100%; width: 100%; overflow: auto">
+          <q-img v-if="!isPDF" fit="none" :src="fileData" alt="" srcset="" />
+          <vue-pdf-embed v-if="isPDF" :source="fileData" />
+
+          <div class="absolute-top-right q-pa-md">
+            <q-btn v-close-popup flat dense round icon="mdi-close"> </q-btn>
+          </div>
+        </div>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -59,15 +88,41 @@ import { showAddPage } from "src/modules/authState";
 import { ref } from "vue";
 
 import { document, title } from "src/modules/addEditData";
-
+import { api } from "src/boot/axios";
+// import VuePdfEmbed from "vue-pdf-embed";
 const q = useQuasar();
 const props = defineProps(["data"]);
 //
-
 let tempData = null;
+const isPDF = ref(false);
 let firstClick = false;
 let secondClick = false;
+const fileData = ref(null);
+const displayFile = ref(false);
 const menuModel = ref(false);
+
+async function onViewDocument(id) {
+  const res = await api.get(`document/${id}`);
+
+  fileData.value = res.data;
+
+  isPDF.value = res.data.includes("data:application/pdf");
+
+  if (isPDF.value) {
+    // let pdfWindow = window.open("");
+    // pdfWindow.document.write(
+    //   `<iframe width='100%' height='100%' src='${fileData.value}' style="border:0" ></iframe>`
+    // );
+  } else {
+    // var image = new Image();
+    // image.src = fileData.value;
+    // var w = window.open("");
+    // w.document.write(image.outerHTML);
+  }
+
+  displayFile.value = true;
+  // window.open(res.data);
+}
 
 function onClickEdit() {
   title.value = "EDIT";
@@ -76,12 +131,9 @@ function onClickEdit() {
 }
 function onDoubleClick(value, label, item) {
   if (firstClick) {
-    console.log(props.data);
-
     secondClick = true;
     firstClick = false;
-    // document.value = { ...props.data };
-    // showAddPage.value = true;
+
     setTimeout(() => {
       secondClick = false;
     }, 400);
@@ -91,7 +143,15 @@ function onDoubleClick(value, label, item) {
     firstClick = false;
   }, 400);
 }
+function onLoadIframe() {
+  // console.log(o.style);
+  const iframe = window.document.getElementById("i-frame");
 
+  console.log(iframe.contentWindow.innerHeight);
+  // return;
+  // o.style.height = o.contentWindow.document.body.scrollHeight + "px";
+  //
+}
 function onTouchStart(item, key) {
   // tempData = item;
 }
@@ -126,5 +186,9 @@ async function copyToClipboard(data, key) {
 //
 th {
   text-align: left;
+}
+
+iframe {
+  //
 }
 </style>

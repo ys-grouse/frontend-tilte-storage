@@ -17,7 +17,7 @@
             outlined
             type="text"
             label="OTP"
-            v-model="user.name"
+            v-model="data.code"
             :rules="[(val) => !!val || 'Enter username']"
           />
 
@@ -25,7 +25,7 @@
             :loading="data.loading"
             class="full-width q-mt-md"
             color="primary"
-            label="Login"
+            label="Submit"
             type="submit"
           />
           <div
@@ -48,7 +48,6 @@
         </q-card-section>
       </q-card>
     </q-form>
-    <q-btn color="primary" icon="check" label="OK" @click="requestOtp" />
   </div>
 </template>
 
@@ -62,6 +61,7 @@ import {
   signInWithPhoneNumber,
 } from "firebase/auth";
 import { useQuasar } from "quasar";
+import { api } from "src/boot/axios";
 
 const q = useQuasar();
 const auth = getAuth();
@@ -71,55 +71,33 @@ const { user, data } = toRefs(props);
 const counter = ref(60);
 let timer = null;
 let appVerifier = null;
-let otpHandler = null;
+
 onMounted(() => {
-  capthca();
   timer = setInterval(() => {
     if (counter.value == 0) window.clearInterval(timer);
     else counter.value--;
   }, 1000);
-  // if (!user.value.phone) user.value.phone = "+919774888724";
-  if (!user.value.phone) user.value.phone = "+91 97748 88724";
+
+  // if (!user.value.phone) user.value.phone = "+91 97748 88724";
 });
 
-function capthca() {
-  window.recaptchaVerifier = new RecaptchaVerifier(
-    "container",
-    {
-      size: "invisible",
-      callback: (response) => {
-        // reCAPTCHA solved, allow signInWithPhoneNumber.
-        // onSignInSubmit();
-        // console.log("asdfasdf");
-        // console.log(response);
-      },
-    },
-    auth
-  );
-
-  appVerifier = window.recaptchaVerifier;
-}
-
-async function requestOtp(params) {
-  try {
-    user.value.phone = "+917085052350";
-    // user.value.phone = "+919774888724";
-    otpHandler = await signInWithPhoneNumber(
-      auth,
-      user.value.phone,
-      appVerifier
-    );
-  } catch (error) {
-    console.log(error.message);
-  }
-}
 async function onSubmit() {
+  let otpVerified = false;
   try {
-    const result = await otpHandler.confirm(data.value.otp);
+    console.log("code is: ", data.value.code);
+    const result = await data.value.otpHandler.confirm(data.value.code);
+    otpVerified = true;
+    const res = await api.post("save-user", user.value);
+    data.value.register = false;
+    data.value.otp = false;
+    console.log("logged in: ", result);
   } catch (error) {
     console.log(error.message);
+    let msg;
+    if (otpVerified) msg = error.message;
+
     q.notify({
-      message: "invalid OTP",
+      message: msg,
     });
   }
 }

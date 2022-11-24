@@ -1,24 +1,5 @@
 <template>
   <div>
-    <q-banner
-      class="text-white bg-red absolute-top q-pr-xs"
-      style="font-size: 19px; z-index: 99"
-      v-show="data.errorMessage"
-    >
-      {{ data.errorMessage }}
-      <template v-slot:action>
-        <q-btn
-          unelevated
-          outlined
-          dense
-          class="bg-red-2"
-          text-color="primary"
-          label="close"
-          @click="data.errorMessage = null"
-        />
-      </template>
-    </q-banner>
-
     <q-form
       v-if="data.register && !data.otp"
       class=""
@@ -87,23 +68,73 @@
         </q-card-section>
       </q-card>
     </q-form>
+    <div id="container"></div>
   </div>
 </template>
 
 <script setup>
 import { api } from "src/boot/axios";
-import { toRefs } from "vue";
+import { onMounted, ref, toRefs } from "vue";
+
+import {
+  getAuth,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+} from "firebase/auth";
+const auth = getAuth();
+const loading = ref(false);
+let appVerifier = null;
 
 const props = defineProps(["user", "data"]);
 const { user, data } = toRefs(props);
 
+onMounted(() => {
+  capthca();
+});
+
+function capthca() {
+  window.recaptchaVerifier = new RecaptchaVerifier(
+    "container",
+    {
+      size: "invisible",
+      callback: (response) => {
+        // reCAPTCHA solved, allow signInWithPhoneNumber.
+        // onSignInSubmit();
+        // console.log("asdfasdf");
+        // console.log(response);
+      },
+    },
+    auth
+  );
+
+  appVerifier = window.recaptchaVerifier;
+}
+
 async function onSubmit() {
+  data.value.loading = true;
   try {
     const res = await api.post("/check-unique", user.value);
+    await requestOtp();
     data.value.otp = true;
+    data.value.loading = false;
   } catch (error) {
+    data.value.loading = false;
+
     console.log(error.message);
   }
+}
+
+async function requestOtp(params) {
+  // user.value.phone = "+917085052350";
+  const phone_number = `+91${user.value.phone}`;
+  // user.value.phone = "+919774888724";
+  console.log(phone_number);
+
+  data.value.otpHandler = await signInWithPhoneNumber(
+    auth,
+    phone_number,
+    appVerifier
+  );
 }
 </script>
 

@@ -1,5 +1,39 @@
 <template>
   <q-page padding class="flex flex-center">
+    <div class="" style="width: 100vw; position: absolute; top: 0">
+      <q-banner
+        class="text-white text-center bg-red absolute-top q-pr-xs"
+        style="z-index: 99"
+        v-show="data.errorMessage"
+      >
+        <span class="row justify-center">
+          <div class="" style="font-size: 19px; width: min(500px, 100vw)">
+            <div class="">
+              {{ data.errorMessage }}
+            </div>
+            <div class="q-mt-sm q-pr-md text-right">
+              <q-btn
+                unelevated
+                outline
+                size="sm"
+                label="close"
+                @click="data.errorMessage = null"
+              ></q-btn>
+            </div>
+          </div>
+        </span>
+        <!-- <template v-slot:action>
+          <q-btn
+            flat
+            dense
+            class="bg-red-2"
+            text-color="primary"
+            label="close"
+            @click="data.errorMessage = null"
+          />
+        </template> -->
+      </q-banner>
+    </div>
     <LoginPage :user="user" :data="data" />
     <RegisterPage :user="user" :data="data" />
     <OtpPage :user="user" :data="data" />
@@ -17,10 +51,10 @@ import RegisterPage from "./RegisterPage.vue";
 // const errorMessage = ref(null);
 const register = ref(false);
 const data = ref({
-  register: true,
+  register: false,
   loading: false,
   errorMessage: false,
-  otp: true,
+  otp: false,
 });
 
 const user = ref({
