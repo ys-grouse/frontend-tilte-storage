@@ -74,7 +74,13 @@
           <vue-pdf-embed v-if="isPDF" :source="fileData" />
 
           <div class="absolute-top-right q-pa-sm" style="z-index: 999">
-            <q-btn v-close-popup dense round color="primary" icon="mdi-close">
+            <q-btn
+              v-close-popup="2"
+              dense
+              round
+              color="primary"
+              icon="mdi-close"
+            >
             </q-btn>
           </div>
         </div>
