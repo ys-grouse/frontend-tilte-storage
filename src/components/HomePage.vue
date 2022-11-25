@@ -1,7 +1,11 @@
 <template>
   <div class="q-pa-sm" style="width: min(500px, 100vw)">
-    <div class="row full-height">
-      <q-card v-if="!documentData.length" class="full-width flex flex-center">
+    <div class="full-height">
+      <q-card
+        v-if="!documentData.length"
+        class="flex flex-center"
+        style="height: 100%"
+      >
         <div class="text-center q-gutter-y-sm" style="padding-bottom: 20vh">
           <div style="font-size: 17px">There's nothing here.</div>
           <div>

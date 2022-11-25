@@ -221,10 +221,11 @@ async function onSubmit() {
     showAddPage.value = false;
   } catch (error) {
     loading.value = false;
+    let msg = error.message;
+    if (error.response) msg = error.response.data;
     q.notify({
-      message: error.message,
+      message: msg,
     });
-    console.log(error.message);
   }
 }
 

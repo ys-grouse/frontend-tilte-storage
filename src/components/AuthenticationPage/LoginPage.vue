@@ -1,11 +1,6 @@
 <template>
   <div>
-    <q-form
-      v-if="!data.register"
-      class=""
-      style="padding-bottom: 20vh"
-      @submit="onSubmit"
-    >
+    <q-form class="" style="padding-bottom: 20vh" @submit="onSubmit">
       <q-card style="width: 500px; max-width: 95vw; position: relative">
         <q-card-section>
           <h6 class="q-my-sm text-center">LOGIN</h6>
@@ -36,7 +31,7 @@
             type="submit"
           />
           <div
-            @click="data.register = true"
+            @click="currentPage = 'register'"
             class="cursor-pointer q-pt-md text-center text-teal"
           >
             CREATE ACCOUNT
@@ -51,6 +46,7 @@
 import { useQuasar } from "quasar";
 import { api } from "src/boot/axios";
 import { authToken, isAuth } from "src/modules/authState";
+import { currentPage } from "src/modules/pageController";
 import { onMounted, ref, toRefs } from "vue";
 
 const props = defineProps(["user", "data"]);

@@ -22,32 +22,23 @@
             </div>
           </div>
         </span>
-        <!-- <template v-slot:action>
-          <q-btn
-            flat
-            dense
-            class="bg-red-2"
-            text-color="primary"
-            label="close"
-            @click="data.errorMessage = null"
-          />
-        </template> -->
       </q-banner>
     </div>
-    <LoginPage :user="user" :data="data" />
-    <RegisterPage :user="user" :data="data" />
-    <OtpPage :user="user" :data="data" />
+    <LoginPage v-if="currentPage == 'login'" :user="user" :data="data" />
+    <RegisterPage v-if="currentPage == 'register'" :user="user" :data="data" />
+    <OtpPage v-if="currentPage == 'enter-otp'" :user="user" :data="data" />
   </q-page>
 </template>
 
 <script setup>
 import { api } from "src/boot/axios";
 import { authToken, isAuth } from "src/modules/authState";
+import { currentPage } from "src/modules/pageController";
 import { ref } from "vue";
 import LoginPage from "./LoginPage.vue";
 import OtpPage from "./OtpPage.vue";
-
 import RegisterPage from "./RegisterPage.vue";
+
 // const errorMessage = ref(null);
 const register = ref(false);
 const data = ref({

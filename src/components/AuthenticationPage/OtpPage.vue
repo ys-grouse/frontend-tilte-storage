@@ -1,15 +1,14 @@
 <template>
   <div>
     <div id="container"></div>
-    <q-form
-      v-if="data.register && data.otp"
-      class=""
-      style="padding-bottom: 20vh"
-      @submit="onSubmit"
-    >
+    <q-form class="" style="padding-bottom: 20vh" @submit="onSubmit">
       <q-card style="width: 500px; max-width: 95vw; position: relative">
         <q-card-section>
           <h6 class="q-my-sm text-center">ENTER OTP</h6>
+          <div class="text-center">
+            Enter the code sent to
+            <span class="text-bold">{{ user.phone }}</span>
+          </div>
         </q-card-section>
         <q-card-section class="q-gutter-y-xs">
           <q-input
@@ -29,18 +28,14 @@
             type="submit"
           />
           <div
-            @click="
-              () => {
-                if (!counter) otpResend();
-              }
-            "
+            @click="otpResend"
             class="cursor-pointer q-pt-md text-center text-teal"
           >
-            RESEND OTP <span v-if="counter">{{ counter }}</span>
+            RESEND OTP <span v-if="resendCounter">{{ resendCounter }}</span>
           </div>
 
           <div
-            @click="data.otp = false"
+            @click="currentPage = 'register'"
             class="cursor-pointer q-pt-md text-center text-teal"
           >
             BACK
@@ -52,7 +47,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, toRefs } from "vue";
+import { onMounted, ref, toRefs, watch, watchEffect } from "vue";
 
 import { app } from "boot/firebase";
 import {
@@ -62,29 +57,23 @@ import {
 } from "firebase/auth";
 import { useQuasar } from "quasar";
 import { api } from "src/boot/axios";
+import { currentPage, resendCounter } from "src/modules/pageController";
 
 const q = useQuasar();
 const auth = getAuth();
 //
 const props = defineProps(["data", "user"]);
 const { user, data } = toRefs(props);
-const counter = ref(60);
-let timer = null;
-let appVerifier = null;
 
 onMounted(() => {
-  timer = setInterval(() => {
-    if (counter.value == 0) window.clearInterval(timer);
-    else counter.value--;
-  }, 1000);
-
+  //
+  //
   // if (!user.value.phone) user.value.phone = "+91 97748 88724";
 });
 
 async function onSubmit() {
   let otpVerified = false;
   try {
-    console.log("code is: ", data.value.code);
     const result = await data.value.otpHandler.confirm(data.value.code);
     otpVerified = true;
     const res = await api.post("save-user", user.value);
@@ -103,8 +92,10 @@ async function onSubmit() {
 }
 
 async function otpResend() {
-  alert("resent");
-  console.log("INVALID OTP");
+  if (resendCounter.value > 0) return;
+  else console.log(resendCounter.value);
+  currentPage.value = "register";
+  data.value.code = "";
 }
 </script>
 

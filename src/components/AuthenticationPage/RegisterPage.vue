@@ -1,11 +1,6 @@
 <template>
   <div>
-    <q-form
-      v-if="data.register && !data.otp"
-      class=""
-      style="padding-bottom: 20vh"
-      @submit="onSubmit"
-    >
+    <q-form class="" style="padding-bottom: 20vh" @submit="onSubmit">
       <q-card style="width: 500px; max-width: 95vw; position: relative">
         <q-card-section>
           <h6 class="q-my-sm text-center">REGISTER</h6>
@@ -56,12 +51,12 @@
             :loading="data.loading"
             class="full-width"
             color="primary"
-            label="Submit"
+            label="Request OTP"
             type="submit"
           />
           <div
             class="cursor-pointer q-pt-md text-center text-teal"
-            @click="data.register = false"
+            @click="currentPage = 'login'"
           >
             BACK
           </div>
@@ -81,10 +76,13 @@ import {
   RecaptchaVerifier,
   signInWithPhoneNumber,
 } from "firebase/auth";
+import { useQuasar } from "quasar";
+import { currentPage, triggerInterval } from "src/modules/pageController";
 const auth = getAuth();
 const loading = ref(false);
 let appVerifier = null;
 
+const q = useQuasar();
 const props = defineProps(["user", "data"]);
 const { user, data } = toRefs(props);
 
@@ -115,20 +113,21 @@ async function onSubmit() {
   try {
     const res = await api.post("/check-unique", user.value);
     await requestOtp();
-    data.value.otp = true;
+    triggerInterval();
+    currentPage.value = "enter-otp";
     data.value.loading = false;
   } catch (error) {
     data.value.loading = false;
-
-    console.log(error.message);
+    let msg = error.message;
+    if (error.response) msg = error.response.data;
+    q.notify({
+      message: msg,
+    });
   }
 }
 
 async function requestOtp(params) {
-  // user.value.phone = "+917085052350";
   const phone_number = `+91${user.value.phone}`;
-  // user.value.phone = "+919774888724";
-  console.log(phone_number);
 
   data.value.otpHandler = await signInWithPhoneNumber(
     auth,

@@ -1,5 +1,6 @@
 import { api } from "src/boot/axios";
 import { ref } from "vue";
+import { currentPage } from "./pageController";
 
 const authToken = ref(null);
 const showAddPage = ref(false);
@@ -21,6 +22,7 @@ async function getUser() {
     isAuth.value = true;
     return res.data;
   } catch (error) {
+    currentPage.value = "login";
     isAuth.value = false;
     return false;
   }

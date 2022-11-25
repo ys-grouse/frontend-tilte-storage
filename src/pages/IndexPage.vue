@@ -10,6 +10,6 @@
 import AuthenticationPage from "src/components/AuthenticationPage/AuthenticationPage.vue";
 import HomePage from "src/components/HomePage.vue";
 import AddPage from "src/components/AddPage.vue";
-
+import { currentPage } from "src/modules/pageController";
 import { isAuth, showAddPage } from "src/modules/authState";
 </script>
