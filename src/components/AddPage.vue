@@ -95,6 +95,7 @@
             dense
             label="Add Document Detail"
             class="q-my-xs full-width"
+            :text-color="nullOnNoDocumentError ?? 'red'"
             @click="addDocumentDetail = true"
           >
           </q-btn>
@@ -194,13 +195,21 @@ import { showAddPage } from "src/modules/authState";
 
 const q = useQuasar();
 const loading = ref(false);
-
+const nullOnNoDocumentError = ref("");
 onUnmounted(() => {
   title.value = "ADD";
 });
 
 async function onSubmit() {
   try {
+    if (Object.keys(document.value.details)?.length <= 0) {
+      q.notify({
+        message: "Add Document Details",
+      });
+
+      nullOnNoDocumentError.value = null;
+      return;
+    } else console.log(document.value.details);
     loading.value = true;
     let res;
     const fd = new FormData();
@@ -208,8 +217,8 @@ async function onSubmit() {
     fd.append("part", document.value.part);
     if (document.value?.document_file)
       fd.append("document_file", document.value.document_file);
+
     fd.append("details", JSON.stringify(document.value.details));
-    console.log(document.value);
 
     if (title.value == "EDIT") {
       // fd.append("_method", "patch");

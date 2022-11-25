@@ -1,16 +1,18 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header>
-      <q-toolbar>
-        <q-toolbar-title> TILTE STORAGE </q-toolbar-title>
-        <q-btn
-          flat
-          dense
-          round
-          icon="mdi-logout"
-          v-if="isAuth"
-          @click="confirmLogoutDialog = true"
-        ></q-btn>
+    <q-header class="">
+      <q-toolbar class="row justify-center">
+        <div class="q-pr-md q-pl-lg row" style="width: min(500px, 100vw)">
+          <q-toolbar-title class=""> TILTE STORAGE </q-toolbar-title>
+          <q-btn
+            flat
+            dense
+            round
+            icon="mdi-logout"
+            v-if="isAuth"
+            @click="confirmLogoutDialog = true"
+          ></q-btn>
+        </div>
       </q-toolbar>
     </q-header>
 
