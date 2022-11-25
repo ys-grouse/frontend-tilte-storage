@@ -196,7 +196,6 @@ const q = useQuasar();
 const loading = ref(false);
 
 onUnmounted(() => {
-  document.value.document_file = "asdfasdf";
   title.value = "ADD";
 });
 
