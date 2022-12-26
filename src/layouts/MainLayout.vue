@@ -2,7 +2,7 @@
   <q-layout view="lHh Lpr lFf">
     <q-header class="">
       <q-toolbar class="row justify-center">
-        <div class="q-pr-md q-pl-lg row" style="width: min(500px, 100vw)">
+        <div class="q-pr-md row" style="width: min(500px, 100vw)">
           <q-toolbar-title class=""> TILTE STORAGE </q-toolbar-title>
           <q-btn
             flat

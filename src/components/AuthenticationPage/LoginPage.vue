@@ -2,8 +2,20 @@
   <div>
     <q-form class="" style="padding-bottom: 20vh" @submit="onSubmit">
       <q-card style="width: 500px; max-width: 95vw; position: relative">
-        <q-card-section>
-          <h6 class="q-my-sm text-center">LOGIN</h6>
+        <q-card-section class="flex flex-center">
+          <div class="row justify-center full-width">
+            <!-- <q-icon
+              size="120px"
+              class="q-pl-xs"
+              name="img:public/tilte-app-icon-orange-bg.png"
+            /> -->
+            <!-- <q-icon
+              size="120px"
+              class="q-pl-xs"
+              name="img:public/icons/favicon-128x128.png"
+            /> -->
+          </div>
+          <h4 class="text-orange q-my-sm flex flex-center">LOGIN</h4>
         </q-card-section>
         <q-card-section class="q-gutter-y-xs">
           <q-input
