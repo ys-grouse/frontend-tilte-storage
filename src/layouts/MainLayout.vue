@@ -24,7 +24,7 @@
     </q-drawer> -->
 
     <q-page-container>
-      <router-view :authToken="token" />
+      <router-view />
       <q-dialog v-model="confirmLogoutDialog">
         <q-card>
           <q-toolbar class="bg-primary text-white">
@@ -46,7 +46,7 @@
 </template>
 
 <script setup>
-import { getToken, authToken, isAuth } from "src/modules/authState";
+import { getToken, authToken, isAuth, getUser } from "src/modules/authState";
 import { onMounted, ref } from "vue";
 import { useQuasar } from "quasar";
 import { api } from "src/boot/axios";
@@ -58,6 +58,7 @@ const confirmLogoutDialog = ref(false);
 const token = null;
 // const token = getToken();
 onMounted(() => {
+  getUser();
   q.dark.set(true);
   //
 });

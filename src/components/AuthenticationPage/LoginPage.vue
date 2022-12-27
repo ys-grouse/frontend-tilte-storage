@@ -78,12 +78,13 @@ async function onSubmit() {
     data.value.loading = true;
     const res = await api.post("login", user.value);
     if (res.data) localStorage.setItem("token", res.data?.token);
-    else localStorage.setItem("token", res.token);
-    console.log(res);
+    // else localStorage.setItem("token", res.token);
+
     data.value.loading = false;
-    window.location.reload();
-    authToken.value = res.token;
+    authToken.value = res.data.token;
     isAuth.value = true;
+    console.log(authToken.value);
+    api.defaults.headers["Authorization"] = `Bearer ${authToken.value}`;
     data.value.loading = false;
   } catch (error) {
     data.value.loading = false;

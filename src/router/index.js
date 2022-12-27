@@ -37,9 +37,9 @@ export default route(function (/* { store, ssrContext } */) {
 
   Router.beforeEach(async (to, from, next) => {
     authToken.value = getToken();
-    await getUser();
+    // await getUser();
 
-    if (isAuth.value || to.fullPath == "/") next();
+    if (to.fullPath == "/") next();
     else next("/");
   });
   return Router;
