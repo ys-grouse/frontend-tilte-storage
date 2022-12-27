@@ -10,6 +10,7 @@
             <q-file
               dense
               outlined
+              accept="image/*,application/pdf"
               v-model="document.document_file"
               :label="
                 title == 'EDIT'
