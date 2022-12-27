@@ -65,9 +65,9 @@ module.exports = configure(function (ctx) {
       env: {
         API_URL: ctx.dev
           ? //
-            // "http://localhost:10000/api"
-            "http://192.168.0.107:10000/api" //mac
-          : //
+            "http://localhost:10000/api"
+          : // "http://192.168.0.107:10000/api" //mac
+            //
             "/api",
       },
       // rawDefine: {}
