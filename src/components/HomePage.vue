@@ -13,40 +13,16 @@
           </div>
         </div>
       </q-card>
-      <div class="full-width q-gutter-y-sm">
-        <q-card v-for="item in documentData" :key="item" class="">
-          <q-item class="q-px-sm" clickable :ripple="true">
-            <q-item-section
-              @click="
-                () => {
-                  tempData = item;
-                  showDetail = true;
-                }
-              "
-            >
-              <q-item-label>
-                {{ item.name }}
-              </q-item-label>
+      <DocumentsList
+        :documentData="documentData"
+        @show-detail="
+          (item) => {
+            tempData = item;
+            showDetail = true;
+          }
+        "
+      />
 
-              <q-item-label caption>
-                {{ item.part }}
-              </q-item-label>
-            </q-item-section>
-            <q-item-section side>
-              <q-btn
-                :title="`copy \`${Object.keys(
-                  item.details
-                )[0].toUpperCase()}\` to clipboard`"
-                flat
-                dense
-                round
-                icon="mdi-clipboard"
-                @click="onCopyText(item)"
-              />
-            </q-item-section>
-          </q-item>
-        </q-card>
-      </div>
       <q-page-sticky
         style="font-size: 1.5rem"
         position="bottom"
@@ -85,31 +61,23 @@ import { isAuth, authToken, showAddPage } from "src/modules/authState";
 
 import { onMounted, ref } from "vue";
 import DetailDocument from "./DetailDocument.vue";
+import DocumentsList from "./DocumentsList.vue";
 
 const q = useQuasar();
 const tempData = ref(null);
 const showDetail = ref(false);
 
 onMounted(() => {
-  if (isAuth.value) getDocuments();
-  //
+  if (authToken.value) {
+    getDocuments();
+  } else {
+    //
+  }
 });
 
 async function getDocuments() {
   const res = await api.get("documents");
   documentData.value = res.data;
-}
-
-async function onCopyText(data) {
-  console.log(data.details["tilte"]);
-  const key = Object.keys(data.details)[0];
-  console.log("key is: ", key);
-  data = data.details[key];
-
-  await navigator.clipboard.writeText(data);
-  q.notify({
-    message: `${key} has been copied to clipboard`,
-  });
 }
 </script>
 

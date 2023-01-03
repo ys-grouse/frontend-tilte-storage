@@ -1,6 +1,12 @@
 import { route } from "quasar/wrappers";
 import { api } from "src/boot/axios";
-import { authToken, getToken, getUser, isAuth } from "src/modules/authState";
+import {
+  authToken,
+  getToken,
+  getUser,
+  isAuth,
+  setHeader,
+} from "src/modules/authState";
 import {
   createRouter,
   createMemoryHistory,
@@ -37,7 +43,8 @@ export default route(function (/* { store, ssrContext } */) {
 
   Router.beforeEach(async (to, from, next) => {
     authToken.value = getToken();
-    // await getUser();
+    setHeader();
+    await getUser();
 
     if (to.fullPath == "/") next();
     else next("/");

@@ -3,18 +3,7 @@
     <q-form class="" style="padding-bottom: 20vh" @submit="onSubmit">
       <q-card style="width: 500px; max-width: 95vw; position: relative">
         <q-card-section class="flex flex-center">
-          <div class="row justify-center full-width">
-            <!-- <q-icon
-              size="120px"
-              class="q-pl-xs"
-              name="img:public/tilte-app-icon-orange-bg.png"
-            /> -->
-            <!-- <q-icon
-              size="120px"
-              class="q-pl-xs"
-              name="img:public/icons/favicon-128x128.png"
-            /> -->
-          </div>
+          <div class="row justify-center full-width"></div>
           <h4 class="text-orange q-my-sm flex flex-center">LOGIN</h4>
         </q-card-section>
         <q-card-section class="q-gutter-y-xs">
@@ -65,10 +54,6 @@ const props = defineProps(["user", "data"]);
 const { user, data } = toRefs(props);
 const q = useQuasar();
 const loading = ref(false);
-// const user = ref({
-//   name: "",
-//   password: "",
-// });
 
 onMounted(() => {
   //
@@ -78,8 +63,6 @@ async function onSubmit() {
     data.value.loading = true;
     const res = await api.post("login", user.value);
     if (res.data) localStorage.setItem("token", res.data?.token);
-    // else localStorage.setItem("token", res.token);
-
     data.value.loading = false;
     authToken.value = res.data.token;
     isAuth.value = true;

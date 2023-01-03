@@ -6,8 +6,10 @@ const authToken = ref(null);
 const showAddPage = ref(false);
 const isLoadone = ref(false);
 const isAuth = ref(false);
+
 function getToken() {
   authToken.value = localStorage.getItem("token");
+  setHeader();
   return authToken.value;
 }
 
@@ -32,6 +34,11 @@ async function getUser() {
   }
 }
 
+function setHeader() {
+  const token = `Bearer ${localStorage.getItem("token")}`;
+  // api.headers.common["Authorization"] = token;
+}
+
 export {
   isAuth,
   isLoadone,
@@ -40,4 +47,5 @@ export {
   getToken,
   getUser,
   setToken,
+  setHeader,
 };

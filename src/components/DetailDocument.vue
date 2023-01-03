@@ -109,6 +109,7 @@ const displayFile = ref(false);
 const menuModel = ref(false);
 
 async function onViewDocument(id) {
+  q.loading.show();
   const res = await api.get(`document/${id}`);
 
   fileData.value = res.data;
@@ -126,6 +127,8 @@ async function onViewDocument(id) {
     // var w = window.open("");
     // w.document.write(image.outerHTML);
   }
+
+  q.loading.hide();
 
   displayFile.value = true;
   // window.open(res.data);

@@ -56,9 +56,8 @@ const loading = ref(false);
 const leftDrawerOpen = ref(false);
 const confirmLogoutDialog = ref(false);
 const token = null;
-// const token = getToken();
+
 onMounted(() => {
-  getUser();
   q.dark.set(true);
   //
 });
