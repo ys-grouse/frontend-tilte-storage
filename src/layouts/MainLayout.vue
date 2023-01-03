@@ -68,6 +68,7 @@ async function onLogoutConfirmed() {
   isAuth.value = false;
   loading.value = false;
   confirmLogoutDialog.value = false;
+  localStorage.removeItem("token");
 }
 
 //

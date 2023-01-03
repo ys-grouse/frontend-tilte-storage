@@ -6,6 +6,7 @@ import {
   getUser,
   isAuth,
   setHeader,
+  isLoadone,
 } from "src/modules/authState";
 import {
   createRouter,
@@ -43,8 +44,13 @@ export default route(function (/* { store, ssrContext } */) {
 
   Router.beforeEach(async (to, from, next) => {
     authToken.value = getToken();
-    setHeader();
-    await getUser();
+
+    if (authToken.value) {
+      // setHeader();
+      await getUser();
+    } else {
+      isLoadone.value = true;
+    }
 
     if (to.fullPath == "/") next();
     else next("/");

@@ -9,7 +9,7 @@ const isAuth = ref(false);
 
 function getToken() {
   authToken.value = localStorage.getItem("token");
-  setHeader();
+
   return authToken.value;
 }
 
@@ -27,15 +27,18 @@ async function getUser() {
     isLoadone.value = true;
     return res.data;
   } catch (error) {
+    alert(error);
     isLoadone.value = true;
     currentPage.value = "login";
     isAuth.value = false;
+    if (error.response.status == 401);
+    // localStorage.removeItem("token");
     return false;
   }
 }
 
 function setHeader() {
-  const token = `Bearer ${localStorage.getItem("token")}`;
+  // const token = `Bearer ${localStorage.getItem("token")}`;
   // api.headers.common["Authorization"] = token;
 }
 

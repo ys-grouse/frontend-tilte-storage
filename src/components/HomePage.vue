@@ -9,11 +9,13 @@
         <div class="text-center q-gutter-y-sm" style="padding-bottom: 20vh">
           <div style="font-size: 17px">There's nothing here.</div>
           <div>
+            {{ isLoadone }} {{ isAuth }}
             Click the green button below to start uploading your documents
           </div>
         </div>
       </q-card>
       <DocumentsList
+        v-if="isLoadone && isAuth"
         :documentData="documentData"
         @show-detail="
           (item) => {
@@ -55,8 +57,9 @@
 <script setup>
 import { useQuasar } from "quasar";
 import { api } from "src/boot/axios";
+import { isLoadone } from "src/modules/authState";
 
-import { documentData } from "src/modules/addEditData";
+import { documentData, getDocuments } from "src/modules/addEditData";
 import { isAuth, authToken, showAddPage } from "src/modules/authState";
 
 import { onMounted, ref } from "vue";
@@ -69,16 +72,11 @@ const showDetail = ref(false);
 
 onMounted(() => {
   if (authToken.value) {
-    getDocuments();
+    // getDocuments();
   } else {
     //
   }
 });
-
-async function getDocuments() {
-  const res = await api.get("documents");
-  documentData.value = res.data;
-}
 </script>
 
 <style lang="scss" scoped></style>

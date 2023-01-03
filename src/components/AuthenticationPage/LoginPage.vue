@@ -46,6 +46,7 @@
 <script setup>
 import { useQuasar } from "quasar";
 import { api } from "src/boot/axios";
+import { getDocuments } from "src/modules/addEditData";
 import { authToken, isAuth } from "src/modules/authState";
 import { currentPage } from "src/modules/pageController";
 import { onMounted, ref, toRefs } from "vue";
@@ -66,7 +67,7 @@ async function onSubmit() {
     data.value.loading = false;
     authToken.value = res.data.token;
     isAuth.value = true;
-    console.log(authToken.value);
+
     api.defaults.headers["Authorization"] = `Bearer ${authToken.value}`;
     data.value.loading = false;
   } catch (error) {

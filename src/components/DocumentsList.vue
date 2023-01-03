@@ -30,10 +30,21 @@
 
 <script setup>
 import { useQuasar } from "quasar";
+import { api } from "src/boot/axios";
+import { getDocuments } from "src/modules/addEditData";
+import { authToken } from "src/modules/authState";
+import { onMounted } from "vue";
 
 const q = useQuasar();
 const props = defineProps(["document-data"]);
 const emit = defineEmits(["show-detail"]);
+
+onMounted(() => {
+  api.defaults.headers["Authorization"] = `Bearer ${authToken.value}`;
+
+  getDocuments();
+});
+
 async function onCopyText(data) {
   const key = Object.keys(data.details)[0];
   data = data.details[key];

@@ -1,4 +1,6 @@
+import { api } from "src/boot/axios";
 import { ref } from "vue";
+import { setHeader } from "./authState";
 
 ///
 const documentData = ref([]);
@@ -15,4 +17,23 @@ const document = ref({
   details: {},
 });
 
-export { documentData, title, label, info, addDocumentDetail, document };
+async function getDocuments() {
+  try {
+    const res = await api.get("documents");
+    documentData.value = res.data;
+  } catch (error) {
+    console.log(error);
+    if (error.response?.status == 401);
+    // localStorage.removeItem("token");
+  }
+}
+
+export {
+  documentData,
+  title,
+  label,
+  info,
+  addDocumentDetail,
+  document,
+  getDocuments,
+};
